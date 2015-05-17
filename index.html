@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>JavaScript Trivia Game</title>
+<base href="http://coursesweb.net/" />
+<meta name="description" content="Script for Trivia Game, created with JavaScript. Trivia quizzes are stored in external files, with XML, or JSON format" />
+<meta name="keywords" content="trivia script, trivia game, javascript trivia" />
+<meta name="robots" content="ALL" />
+<meta name="author" content="MarPlo" />
+<!--[if IE]><link rel="stylesheet" type="text/css" media="all" href="templ/style.css"><script src="js/html5.js"></script><![endif]--><link rel="icon" type="image/x-icon" href="/imgs/cw.ico" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" media="only screen and (max-width: 400px)" href="templ/mobile_style.css" />
+<link rel="stylesheet" media="only screen and (min-width: 401px)" href="templ/style.css" /><script src="js/functions.js" type="text/javascript"></script></head><body><header id="header"><h2 id="tlpgs">JavaScript Course</h2></header><section id="center"><article id="ctext"><h1>JavaScript Trivia Game</h1>
+A <strong>script for Trivia</strong> created with JavaScript. The quizzes (questions and answers) are stored in external files, in XML or JSON format.<br/>
+The <strong>Trivia Game</strong> has two levels:<br/>
+ &nbsp; &bull; Level 1 - displays a list of answers to each quiz, and the user must click on the correct answer.<br/>
+ &nbsp; &bull; Level 2 - is a little more difficult because it is displayed only a text box in which the user can write the answer.<br/>
+It has two modes:<br/>
+ &nbsp; &bull; Consecutive - the quiestions start from the quiz with index number added into a text field, and are displayed in their order till the last quiz.<br/>
+ &nbsp; &bull; Random - the quizzes are choosed randomly, till the last quiz, without repeat.<br/>
+Also, the user can choose to play the trivia with a Countdown Timer (15 seconds to answer till the script adds automatically the next quiz).<br/>
+You can easily add quizzes and multiple categories in this Trivia script, the quizzes of each category are stored in its external file (more informations are in "readme.html" file in the archive with this script).<br/><br/>
+ &bull; To Download this script, click: <span onclick="linkuri('javascript/s2/trivia_game_script.zip', 0)" class="link">Trivia Game Script</span>.
+<h4>Demo Trivia</h4>
+<div id="trivia">
+ <div id="tcateg">Trivia Category:</div>
+ <div id="quiz"><h3>Welcome to Trivia Game</h3><strong>Levels:</strong><ul><li>Level 1 - Easy - It is displayed a list of answers to each quiz. Click the correct answer.</li><li>Level 2 - Difficult - It is displayed a text box in which you must write the answer, then click on Send button.</li></ul><strong>Mode</strong><ul><li>Consecutive - The quiestions start from the quiz with index number added into a text field, and are added in their order till the last quiz.</li><li>Random - The quizzes are choosed randomly, till the last quiz, without repeat.</li></ul>&bull; <strong>Countdown Timer</strong> - If that button is checked, you have 15 seconds to answer till the next quiz is added automatically.<br/><br/> - Click the Start button to start the quizzes. The Reset button resets the Trivia.</div>
+ <div id="answered">
+  <h4>Quizzes: <em id="nqansw">0</em> of <span id="ntotalq"></span></h4>
+  <span id="nca">0</span> - Correct answers<br/>
+  <span id="nia">0</span> - Incorrect answers
+ </div>
+ <div id="qdata">
+  <label for="level1"><input type="radio" name="level" id="level1" checked="checked" />Level 1</label>
+  <label for="level2"><input type="radio" name="level" id="level2" />Level 2</label>
+  <h4>Mode</h4>
+  <label for="qindex"><input type="radio" name="qmode" id="qindex" checked="checked" />Consecutive</label>
+  <div id="startqn">From <input type="text" size="1" name="nquiz" id="nquiz" value="1" /> to <span id="totalq"></span></div>
+  <label for="qrandom"><input type="radio" name="qmode" id="qrandom" />Random</label>
+  <label for="qctimer"><input type="checkbox" id="qctimer" />Countdown Timer</label><hr/>
+  <button id="squiz">Start</button>
+  <button id="treset" disabled="disabled">Reset</button>
+ </div>
+</div>
+<script type="text/javascript"><!--
+function addCssStyles(styles){var head=document.getElementsByTagName('head')[0];var style=document.createElement('style');style.type='text/css';if(style.styleSheet){style.styleSheet.cssText=styles;}else{var tt1=document.createTextNode(styles);style.appendChild(tt1);}
+head.appendChild(style);}
+addCssStyles('#trivia {position:relative;width:35em;min-height:22em;margin:1em auto;background:#bcdeef;border:1px solid blue;padding:.1em;font-family:"Calibri",sans-serif;}#trivia #tcateg {margin:0 28% .2em 1em;font-weight:800;}#trivia #quiz {position:relative;min-height:21em;margin:0 26% 0 0;background:#fbfbfd;-moz-border-radius:.8em;-webkit-border-radius:.8em;-khtml-border-radius:.8em;border-radius:.8em;padding:.3em;}#trivia #quiz h3 {margin:.2em auto;text-align:center;}#trivia #quiz #tquestion {text-decoration:none;margin:2em .1em 1.5em .1em;}#trivia #quiz #sctimer {position:absolute;top:.3em;right:.5em;background:yellow;border:1px dashed #00d001;padding:0 .2em;font-size:1.2em;font-weight:800;color:#00d001;}#trivia #quiz #qnr {margin:0 2em 0 1.5em;padding:0;font-size:.9em;font-style:italic;}#trivia #quiz #qansw {margin:0 .1em;background:#f4f5fe;-moz-border-radius:.6em;-webkit-border-radius:.6em;-khtml-border-radius:.6em;border-radius:.6em;padding:.2em .4em;}#trivia #quiz .qanswer {margin:.1em;border:1px solid #333;background-image: -ms-linear-gradient(top, #efeff0, #fbfbfb);background-image:-moz-linear-gradient(top, #efeff0, #fbfbfb 95%);background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #efeff0), color-stop(0.9, #fbfbfb));background-image: -o-linear-gradient(top, #efeff0, #fbfbfb);background: linear-gradient(top, #efeff0, #fbfbfb);-moz-border-radius:.3em;-webkit-border-radius:.3em;-khtml-border-radius:.3em;border-radius:.3em;padding:.1em;font-size:1.05em;cursor:pointer;}#trivia #quiz .qanswer:before {content:"• "}#trivia #quiz .qanswer:hover {margin:.1em;border:1px solid green;background:#dafbda;background-image: -ms-linear-gradient(top, #fbfbfb, #dafbda);background-image:-moz-linear-gradient(top, #fbfbfb, #dafbda 95%);background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fbfbfb), color-stop(0.9, #dafbda));background-image: -o-linear-gradient(top, #fbfbfb, #dafbda);background: linear-gradient(top, #fbfbfb, #dafbda);-moz-border-radius:0;-webkit-border-radius:0;-khtml-border-radius:0;border-radius:0;font-size:1.05em;}#trivia #quiz #nextq {display:block;margin:1em auto 1em 30%;cursor:pointer;}#trivia #answered {position:absolute;top:.3em;right:.1em;width:25%;height:4em;background:#eeefef;-moz-border-radius:.5em;-webkit-border-radius:.5em;-khtml-border-radius:.5em;border-radius:.5em;padding:.1em 0 .1em .1em;font-size:.9em;}#trivia #answered h4 {margin:.1em 0 0 1em;}#trivia #answered #ntotalq {font-size:1.1em;text-decoration:underline;}#trivia #answered #nqansw, #trivia #answered #nca, #trivia #quiz #canswer {color:#0001fe;font-weight:800;font-size:1.1em;}#trivia #answered #nia, #trivia #quiz #iansw {color:#fe0001;font-weight:800;font-size:1.1em;}#trivia #qdata {position:absolute;top:7em;right:.1em;width:25%;background:#fefeed;}#trivia #qdata h4 {margin:.4em 1px 0 1px;text-align:center;}#trivia #qdata label, #trivia #qdata button {display:block;margin:.3em 0;cursor:pointer;}#trivia #qdata #startqn {margin:0 0 0 1em;font-size:.85em;color:#0001ed;}#trivia #qdata #nquiz {width:2em;height:.9em;font-size:.85em;}#trivia #qdata button {margin:.3em 0 .3em 25%;font-size:.85em;}');
+function Trivia(){var obth=this;var objfiles={};var level='level1';var stopct=0;var ctsec=15;var nquizzes=0;var nquiz=0;var canswer='';var nqansw=0;var nca=0;var nia=0;var qmode='qindex';var qctimer=0;var iquizzes=[];var quizzes=[];this.setCateg=function(objf,type){objfiles=objf;var tcateg='';var propf='';var i=0;for(var prop in objfiles){if(i===0)propf=prop;i=1;tcateg+='<option value='+prop+'>'+prop+'</option>';}
+if(type=='xml')obth.setQuizXML(propf);else obth.setQuizJSON(propf);var onchg=type=='xml'?'onchange="obTrivia.setQuizXML(this.value)"':'onchange="obTrivia.setQuizJSON(this.value)"';if(document.getElementById('tcateg'))document.getElementById('tcateg').innerHTML='Trivia Category: <select '+onchg+'>'+tcateg+'</select>';}
+var getXmlHttp=function(){if(window.XMLHttpRequest){xhttp=new XMLHttpRequest();}
+else{xhttp=new ActiveXObject("Microsoft.XMLHTTP");}
+return xhttp;}
+this.setQuizXML=function(propf){obth.resetTrivia();quizzes=[];iquizzes=[];var xhttp=getXmlHttp();xhttp.open("GET",'javascript/s2/trivia/'+objfiles[propf],false);xhttp.send(null);var xml_dom=xhttp.responseXML;var arr_quiz=xml_dom.getElementsByTagName('quiz');nquizzes=arr_quiz.length;for(var i=0;i<nquizzes;i++){quizzes[i]={};quizzes[i]['que']=arr_quiz[i].getElementsByTagName('que')[0].childNodes[0].nodeValue;quizzes[i]['ca']=arr_quiz[i].getElementsByTagName('ca')[0].childNodes[0].nodeValue;quizzes[i]['ia']=[];var arr_ia=arr_quiz[i].getElementsByTagName('ia');var nr_ia=arr_ia.length;for(var i2=0;i2<nr_ia;i2++){quizzes[i]['ia'][i2]=arr_ia[i2].childNodes[0].nodeValue;}}
+if(document.getElementById('totalq'))document.getElementById('totalq').innerHTML=nquizzes;if(document.getElementById('ntotalq'))document.getElementById('ntotalq').innerHTML=nquizzes;}
+this.setQuizJSON=function(propf){obth.resetTrivia();quizzes=[];iquizzes=[];var xhttp=getXmlHttp();xhttp.open("GET",'javascript/s2/trivia/'+objfiles[propf],true);xhttp.send(null);xhttp.onreadystatechange=function(){if(xhttp.readyState==4){var tobj=xhttp.responseText;tobj=tobj.replace(/\\|\r\n|\n|\r/gm,'');eval("quizzes ="+tobj);nquizzes=quizzes.length;if(document.getElementById('totalq'))document.getElementById('totalq').innerHTML=nquizzes;if(document.getElementById('ntotalq'))document.getElementById('ntotalq').innerHTML=nquizzes;}}}
+var startCT=function(){if(ctsec>=0){if(stopct==0&&document.getElementById('sctimer')){document.getElementById('sctimer').innerHTML=ctsec;setTimeout(startCT,1000);}
+ctsec--;}
+else obth.getAnswer(0);}
+this.setLevel=function(lvl){level=lvl;}
+var setQmode=function(){if(document.getElementById('qindex').checked==true)qmode='qindex';else if(document.getElementById('qrandom').checked==true)qmode='qrandom';}
+this.setQctimer=function(btn){if(btn.checked==true)qctimer=1;else qctimer=0;}
+var setIQrandom=function(stn){if(stn=='start'){for(var i=0;i<nquizzes;i++)iquizzes[i]=i;}
+else{var nqr=iquizzes.length;for(var i=0;i<nqr;i++){if(iquizzes[i]==nquiz){iquizzes.splice(i,1);break;}}
+iquizzes.sort();}
+return iquizzes[Math.floor(Math.random()*iquizzes.length)];}
+var setNquiz=function(stn){if(qmode=='qrandom')nquiz=setIQrandom(stn);else if(stn=='start'){nquiz=document.getElementById('nquiz').value-1;if(nquiz<0||nquiz>=nquizzes||!(typeof(nquiz)==="number"&&Math.round(nquiz)==nquiz)){obth.resetTrivia();alert('The value of Starting quiz number must be an integer number between 1 and '+nquizzes);}}
+else{if(nquiz<(nquizzes-1))nquiz++;else obth.resetTrivia();}}
+this.sQuiz=function(stn){setQmode();setNquiz(stn);deBtns(['level1','level2','qindex','nquiz','qrandom','qctimer','squiz'],'disable');canswer=quizzes[nquiz]['ca'];if(document.getElementById('quiz')){var addct=(qctimer==0)?'':'<div id="sctimer">0</div>';nqansw++;answered();document.getElementById('quiz').innerHTML=addct+'<h4 id="qnr">Quiz No. '+(nquiz+1)+'</h4><h4 id="tquestion">&#9675; '+quizzes[nquiz]['que']+'</h4><div id="qansw">'+(level=='level1'?qAnswerL1():qAnswerL2())+'</div>';if(qctimer==1){stopct=0;ctsec=15;startCT();}}}
+this.resetTrivia=function(){nquiz=0;qctimer=0;nqansw=0;nca=0;nia=0;answered();deBtns(['level1','level2','qindex','nquiz','qrandom','qctimer','squiz'],'enable');document.getElementById('nquiz').value=1;document.getElementById('qctimer').checked=false;document.getElementById('quiz').innerHTML='<h3>Welcome to Trivia Game</h3><strong>Levels:</strong><ul><li>Level 1 - Easy - It is displayed a list of answers to each quiz. Click the correct answer.</li><li>Level 2 - Difficult - It is displayed a text box in which you must write the answer, then click on Send button.</li></ul><strong>Mode</strong><ul><li>Consecutive - The quiestions start from the quiz with index number added into a text field, and are added in their order till the last quiz.</li><li>Random - The quizzes are choosed randomly, till the last quiz, without repeat.</li></ul>&bull; <strong>Countdown Timer</strong> - If that button is checked, you have 15 seconds to answer till the next quiz is added automatically.<br/><br/> - Click the Start button to start the quizzes. The Reset button resets the Trivia.';}
+var deBtns=function(ids,de){var nrids=ids.length;for(var i=0;i<nrids;i++){if(de=='disable')document.getElementById(ids[i]).setAttribute('disabled','disabled');else document.getElementById(ids[i]).removeAttribute('disabled');}
+if(de=='disable')document.getElementById('treset').removeAttribute('disabled');else document.getElementById('treset').setAttribute('disabled','disabled');}
+var qAnswerL1=function(){var qhtml='';var nr_ia=quizzes[nquiz]['ia'].length;var randomnr=Math.floor(Math.random()*nr_ia);for(var i=0;i<nr_ia;i++){if(i==randomnr){qhtml+='<div class="qanswer" onclick="obTrivia.getAnswer(this)">'+canswer+'</div>';randomnr=-1;i--;}
+else qhtml+='<div class="qanswer" onclick="obTrivia.getAnswer(this)">'+quizzes[nquiz]['ia'][i]+'</div>';}
+return qhtml;}
+var qAnswerL2=function(){return'<input type="text" id="qanswerl2" /><button onclick="obTrivia.getAnswer(document.getElementById(\'qanswerl2\'))">Send</button>';}
+var answered=function(){if(document.getElementById('ntotalq'))document.getElementById('ntotalq').innerHTML=nquizzes;if(document.getElementById('nqansw'))document.getElementById('nqansw').innerHTML=nqansw;if(document.getElementById('nca'))document.getElementById('nca').innerHTML=nca;if(document.getElementById('nia'))document.getElementById('nia').innerHTML=nia;}
+this.getAnswer=function(answ){stopct=1;if(document.getElementById('qansw')){if(answ!=0)var qanswer=answ.id=='qanswerl2'?answ.value.replace(/^\s+|\<+|\>+|\s+$/g,''):answ.innerHTML.replace(/^\s+|\s+$/g,'');if(answ==0){nia++;var seeansw='<h4 id="iansw">Time expired</h4><h4 id="cansw">The Correct answer is:</h4><div id="canswer">'+canswer+'</div>';}
+else if(qanswer.toLowerCase()==canswer.toLowerCase()){nca++;var seeansw='<div id="canswer">'+qanswer+'</div><h4 id="cansw">&gt; Correct</h4>';}
+else{nia++;var seeansw='<strike>'+qanswer+'</strike><h4 id="iansw">Incorrect, the correct answer is:</h4><div id="canswer">'+canswer+'</div>';}
+answered();seeansw+=((qmode=='qindex'&&nquiz==(nquizzes-1))||(qmode=='qrandom'&&iquizzes.length==1))?'<h4> - <em>That was the last quiz</em>.</h4>':'<button id="nextq" onclick="obTrivia.sQuiz(\'next\')">Next</button>';document.getElementById('qansw').innerHTML=seeansw;}}
+if(document.getElementById('level1'))document.getElementById('level1').onclick=function(){obth.setLevel('level1');}
+if(document.getElementById('level2'))document.getElementById('level2').onclick=function(){obth.setLevel('level2');}
+if(document.getElementById('qindex'))document.getElementById('qindex').onclick=function(){document.getElementById('startqn').style.display='block';}
+if(document.getElementById('qrandom'))document.getElementById('qrandom').onclick=function(){document.getElementById('startqn').style.display='none';}
+if(document.getElementById('qctimer'))document.getElementById('qctimer').onclick=function(){obth.setQctimer(this);}
+if(document.getElementById('squiz'))document.getElementById('squiz').onclick=function(){obth.sQuiz('start');}
+if(document.getElementById('treset'))document.getElementById('treset').onclick=function(){obth.resetTrivia();}}
+var obTrivia=new Trivia();var files_xml={'General':'general.xml','Animals':'animals.xml'};obTrivia.setCateg(files_xml,'xml');
+--></script></article><nav id="left"><h4>Lessons / Tutorials</h4><ul><li> <a href="/javascript/" title="JavaScript Course">JavaScript Course</a></li><li> <a href="/jquery/jquery-course" title="jQuery Course">jQuery Course</a></li><li> <a href="/javascript/tutorials_t" title="JavaScript Tutorials">Tutorials</a></li><li> <a href="/javascript/code-snippets_cs" title="JavaScript Code Snippets">JavaScript Code Snippets</a></li><li> <a href="/javascript/video-tutorials_t2" title="JavaScript Video Course Tutorials">Video Tutorials</a></li><li> <a href="/javascript/javascript-scripts_s2" title="JavaScript Scripts">JavaScript Scripts</a></li><li> <a href="/jquery/jquery-plugins_jp" title="Useful jQuery Plugins">jQuery Plugins</a></li><li> <a href="/javascript/download_l2" title="JavaScript Resources Download">Download</a></li></ul><ins id="gads_160x600" class="adsbygoogle" data-ad-client="ca-pub-9841755376220312" data-ad-slot="4504309317"></ins></nav><aside id="intop"><ins id="gads_200x200" class="adsbygoogle" data-ad-client="ca-pub-9841755376220312" data-ad-slot="2923662064"></ins>
+<div id="subtop_c"><h4>Daily Test with Code Example</h4><h5 id="dlthtml">HTML</h5><h5 id="dltcss">CSS</h5><h5 id="dltjavascript" class="tab_clk">JavaScript</h5><h5 id="dltphp-mysql">PHP-MySQL</h5><div id="t_dlthtml" class="tb_elms"><div class="test_ask">Which HTML5 tag is indicated to be used as container for menu with navigation links in Web site?</div><span> &lt;section&gt;</span><span id="dlthtml_rc"> &lt;nav&gt;</span><span> &lt;article&gt;</span><pre>&lt;nav&gt;&lt;ul&gt;
+ &lt;li&gt;&lt;a href="http://coursesweb.net/css/" title="CSS Course"&gt;CSS Course&lt;/a&gt;&lt;/li&gt;
+ &lt;li&gt;&lt;a href="http://www.marplo.net/jocuri/" title="Flash Games"&gt;Flash Games&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/nav&gt;</pre></div><div id="t_dltcss" class="tb_elms"><div class="test_ask">Which CSS property shifts an item horizontally to the left or right of where it was?</div><span> text-align</span><span> clear</span><span id="dltcss_rc"> float</span><pre>.some_class {
+  width: 30%;
+  float: left;
+}</pre></div><div id="t_dltjavascript" class="tb_elms tb_vi"><div class="test_ask">Click on the Math object method which returns x, rounded downwards to the nearest integer.</div><span> Math.ceil(x)</span><span> Math.abs(x)</span><span id="dltjavascript_rc"> Math.floor(x)</span><pre>var num = 12.34567;
+num = Math.floor(num);
+alert(num);       // 12</pre></div><div id="t_dltphp-mysql" class="tb_elms"><div class="test_ask">Indicate the PHP function which returns the number of characters in string.</div><span id="dltphp-mysql_rc"> mb_strlen()</span><span> count()</span><span> stristr()</span><pre>$str = "string with utf-8 chars åèö";
+$nrchr = mb_strlen($str);
+echo $nrchr;        // 30</pre></div></div>
+<div id="subtop_r">
+<nav id="lm"><a href="/" title="Home page">Home</a>  <a href="/forum/" title="Forum">Forum</a>  <a href="/html/" title="HTML Course">HTML</a>  <a href="/css/" title="CSS Course">CSS</a>  <a href="/php-mysql/" title="PHP-MySQL Course">PHP-MySQL</a>  <a href="/ajax/" title="AJAX Course">AJAX</a>  <a href="/flash/" title="Flash / AS3 Course">Flash-ActionScript</a></nav>
+<div id="rf"><strong id="fav">JavaScript Trivia Game</strong></div>
+</div><ins id="gads_728x90" class="adsbygoogle" data-ad-client="ca-pub-9841755376220312" data-ad-slot="2824438748"></ins>
+</aside><nav id="siteacc"><div id="pgalast"><h4>Last accessed pages</h4><ol><li><span class="islnk" title="jquery/add-change-remove-attribute-jquery">Add, Change, and Remove Attributes with jQuery</span> <sup>(47803)</sup></li><li><span class="islnk" title="php-mysql/php-mysql-insert">PHP MySQL - INSERT INTO</span> <sup>(19377)</sup></li><li><span class="islnk" title="php-mysql/pdo-select-query-fetch">PHP PDO - Select query, fetch</span> <sup>(24424)</sup></li><li><span class="islnk" title="flash/multiframe-symbols">Multiframe Symbols</span> <sup>(938)</sup></li><li><span class="islnk" title="css/css-cursor-property-custom-cursors">CSS cursor property - Custom Cursors</span> <sup>(5726)</sup></li></ol></div><div id="pgatop"><h4>Top accessed pages</h4><ol><li><span class="islnk" title="jquery/add-change-remove-attribute-jquery">Add, Change, and Remove Attributes with jQuery</span> <sup>(47803)</sup></li><li><span class="islnk" title="php-mysql/pdo-exec-insert-update-delete">PHP PDO - exec (INSERT, UPDATE, DELETE) MySQL</span> <sup>(45044)</sup></li><li><span class="islnk" title="php-mysql/script-chat-simple_s2">PHP Chat Script</span> <sup>(44932)</sup></li><li><span class="islnk" title="jquery/add-remove-elements-content-jquery">Add and Remove HTML elements and Content with jQuery</span> <sup>(44770)</sup></li><li><span class="islnk" title="jquery/get-attribute-id-class-name-title-src-jquery">Get Attribute (ID, Class, Name, Title, Src) with jQuery</span> <sup>(43597)</sup></li></ol></div><strong id="keyw">JavaScript Course : trivia script, trivia game, javascript trivia</strong>
+</nav>
+</section><script async src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script type="text/javascript">
+// <![CDATA[
+var adstags = document.getElementsByTagName('ins');
+var nr_adstags = adstags.length;
+if(nr_adstags > 0){
+  for(var i=0; i<nr_adstags; i++) {(adsbygoogle = window.adsbygoogle || []).push({});}
+}
+// ]]>
+</script>
+<footer id="footer"><nav id="link_s"><a href="/" title="Home page">Home</a> | <a href="/html/" title="HTML Course">HTML</a> | <a href="/css/" title="CSS Course">CSS</a> | <a href="/javascript/" title="JavaScript Course">JavaScript</a> | <a href="/php-mysql/" title="PHP-MySQL Course">PHP-MySQL</a> | <a href="/ajax/" title="AJAX Course">AJAX</a> | <a href="/flash/" title="Flash / AS3 Course">Flash - ActionScript</a> | <a href="/ex/free-courses" title="Other Free Courses">Other Free Courses</a> | <a href="/forum/" title="Forum">Forum</a> | <a href="/blog/" title="Blog - Spirituality">BLOG</a></nav><em id="mp">- CoursesWeb.net WebMaster, WebDesigner : Marius -</em></footer></body></html>
